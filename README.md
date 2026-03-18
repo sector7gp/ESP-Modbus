@@ -90,4 +90,10 @@ Serial1.begin(modbusBaudrate, SERIAL_8N1, PIN_RX, PIN_TX);
 ✔️ **A/B** → Borneras A/B driver  
 ✔️ **HIGH** = transmite / **LOW** = recibe (Lo gestiona el software automáticamente)
 
-![Pinout ESP32-C3 y MAX485](pinout.png)
+### 📸 Pinouts de Referencia
+
+**Pinout ESP32-C3 SuperMini:**
+![Pinout ESP32-C3](docs/pinout_esp32c3.jpeg)
+
+**Pinout MAX485:**
+![Pinout MAX485](docs/pinout_max485.jpeg)
