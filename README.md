@@ -83,7 +83,7 @@ Serial1.begin(modbusBaudrate, SERIAL_8N1, PIN_RX, PIN_TX);
 ---
 
 ### 🚀 Resumen corto para un rápido ensamble
-
+![alt text](image.png)
 ✔️ **TX (21)** → DI  
 ✔️ **RX (20)** → RO  
 ✔️ **GPIO (10)** → DE + RE (juntos)  
