@@ -75,6 +75,11 @@ h2 {
 /* Controls */
 .button-group {
     display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.button-row {
+    display: flex;
     gap: 16px;
     justify-content: center;
     flex-wrap: wrap;
@@ -91,8 +96,8 @@ h2 {
     touch-action: manipulation;
 }
 .action-btn:active { transform: scale(0.95); }
-.dir-btn { background: var(--accent); color: white; }
-.stop-btn { background: var(--danger); color: white; }
+.dir-btn { background: var(--accent); color: white; flex: 1; }
+.stop-btn { background: var(--danger); color: white; width: 100%; }
 .help-text { text-align: center; margin-top: 16px; color: var(--text-secondary); font-size: 14px; }
 
 /* Config Form */

@@ -1,51 +1,51 @@
-# Control de Motor vía Modbus con ESP32-C3
+# ESP32-C3 Modbus Motor Control (v1.0)
 
-Este proyecto permite controlar un driver de motor mediante protocolo Modbus RTU utilizando un microcontrolador ESP32-C3 SuperMini. Dispone de entradas digitales para controles físicos y una interfaz web en red local configurada como Punto de Acceso (AP).
+This project allows controlling a motor driver via Modbus RTU protocol using an ESP32-C3 SuperMini microcontroller. It features digital inputs for physical controls and a local web interface configured as an Access Point (AP).
 
-## 🔌 Conexión ESP32-C3 + MAX485 (Modbus RTU)
-El módulo MAX485 (TTL ↔ RS485) toma el rol vital de convertir la comunicación UART del ESP32 en una señal diferencial robusta para el bus RS485.
+## 🔌 ESP32-C3 + MAX485 (Modbus RTU) Connection
+The MAX485 module (TTL ↔ RS485) plays the vital role of converting the ESP32's UART communication into a robust differential signal for the RS485 bus.
 
-### 📐 Conexiones
+### 📐 Connections
 
 🔹 **ESP32-C3 → MAX485**
 
-| ESP32-C3 | MAX485 | Descripción |
+| ESP32-C3 | MAX485 | Description |
 | :--- | :--- | :--- |
-| **3.3V** | **VCC** | Alimentación |
-| **GND** | **GND** | Tierra |
-| **TX (GPIO 21)** | **DI** | Datos a transmitir |
-| **RX (GPIO 20)** | **RO** | Datos recibidos |
-| **GPIO 10** | **DE + RE** | Control dirección |
+| **3.3V** | **VCC** | Power |
+| **GND** | **GND** | Ground |
+| **TX (GPIO 21)** | **DI** | Data to transmit |
+| **RX (GPIO 20)** | **RO** | Data received |
+| **GPIO 10** | **DE + RE** | Direction control |
 
-**🔁 Punto CLAVE: DE y RE**
-En el módulo MAX485:
-- **DE** (Driver Enable) → Habilita la transmisión.
-- **RE** (Receiver Enable) → Habilita la recepción (activo en LOW, es decir su valor lógico está negado).
+**🔁 KEY Point: DE and RE**
+On the MAX485 module:
+- **DE** (Driver Enable) → Enables transmission.
+- **RE** (Receiver Enable) → Enables reception (active LOW, meaning its logic value is inverted).
 
-👉 **Lo que se hace en la práctica:**
-Se unen físicamente los pines DE y RE.
+👉 **What is done in practice:**
+The DE and RE pins are physically tied together.
 ```text
 DE ─┬─ GPIO 10 (PIN_DE_RE)
     └─ RE
 ```
 
-**🔄 Lógica de funcionamiento (Control Direccional)**
-| GPIO 10 | Modo del MAX485 |
+**🔄 Operating Logic (Direction Control)**
+| GPIO 10 | MAX485 Mode |
 | :--- | :--- |
-| **LOW** | Recepción (`Serial1.read`) |
-| **HIGH** | Transmisión (`Serial1.write`) |
+| **LOW** | Reception (`Serial1.read`) |
+| **HIGH** | Transmission (`Serial1.write`) |
 
-En nuestro código, el control `HIGH`/`LOW` de este pin lo maneja automáticamente la librería `ModbusMaster` gracias a las sentencias `node.preTransmission()` y `node.postTransmission()` en `src/main.cpp`.
+In our code, `HIGH`/`LOW` control of this pin is handled automatically by the `ModbusMaster` library via the `node.preTransmission()` and `node.postTransmission()` functions in `src/main.cpp`.
 
-🔹 **Conexión al driver (RS485)**
-| MAX485 | Driver Motor |
+🔹 **Connection to driver (RS485)**
+| MAX485 | Motor Driver |
 | :--- | :--- |
 | **A** | **A** (Data +) |
 | **B** | **B** (Data -) |
 
-> 👉 **Si el sistema no comunica:** Prueba **invertir** A y B en los terminales del driver. Es el típico problema RS-485.
+> 👉 **If the system does not communicate:** Try **swapping** A and B on the driver terminals. This is the most common RS-485 issue.
 
-### 📊 Diagrama de conexión completo
+### 📊 Full Connection Diagram
 ```text
         +-------------------+
         |     ESP32-C3      |
@@ -63,37 +63,37 @@ En nuestro código, el control `HIGH`/`LOW` de este pin lo maneja automáticamen
           +-------------+
 ```
 
-### ⚠️ Alimentación (MUY importante)
-Muchos módulos genéricos MAX485 dicen 5V, pero en la práctica pueden funcionar con 3.3V, o bien requieren de manera estricta que les des los 5V. 
-👉 **Lo ideal:**
-- Si el módulo tiene un regulador y permite lógica 3.3V, aliméntalo con la salida de 3.3V del ESP32.
-- **⚠️ Si el módulo es estrictamente de 5V pero la lógica TTL de tu ESP32 maneja 3.3V:** Podrías requerir un _Level Shifter_ (conversor de nivel lógico) en las líneas TX y RX para proteger el chip ESP32 (los pines del C3 toleran en general niveles hasta la alimentación, 3.3V, y 5V podría quemarlos, especialmente por la vía desde `RO` al ESP32). Revisa las especificaciones exactas de la versión de hardware MAX485 que tengas en mano.
+### ⚠️ Powering (VERY important)
+Many generic MAX485 modules state 5V, but in practice they can work with 3.3V, or they strictly require 5V.
+👉 **The ideal setup:**
+- If the module has a regulator and supports 3.3V logic, power it with the 3.3V output from the ESP32.
+- **⚠️ If the module is strictly 5V but your ESP32 TTL logic handles 3.3V:** You might need a _Level Shifter_ on the TX and RX lines to protect the ESP32 chip (C3 pins generally tolerate up to supply voltage, 3.3V, and 5V could burn them, especially via the path from `RO` to the ESP32). Check the exact specifications of the MAX485 hardware version you are using.
 
-### ⚙️ Configuración UART en Firmware
-En `src/main.cpp` configuramos el bus serial a través de `Serial1` usando los pines específicos del C3:
+### ⚙️ UART Configuration in Firmware
+In `src/main.cpp` we configure the serial bus via `Serial1` using the specific C3 pins:
 ```cpp
 Serial1.begin(modbusBaudrate, SERIAL_8N1, PIN_RX, PIN_TX);
 ```
 
-### ⚠️ Buenas prácticas
-1. **Terminación (si el cable es largo):** Resistencia 120Ω entre las borneras A y B en el extremo de la línea.
-2. **Masa común:** Siempre conectar GND del circuito ESP32+MAX485 con el borne GND señalizado del Driver Motor, para establecer un potencial de referencia idéntico.
-3. **Cable:** Usar cable de par trenzado (ej. UTP Cat5/6 para red) para A y B, esto reduce profundamente el ruido inducido.
+### ⚠️ Best Practices
+1. **Termination (if cable is long):** 120Ω resistor between A and B terminals at the end of the line.
+2. **Common ground:** Always connect GND of the ESP32+MAX485 circuit with the indicated GND terminal of the Motor Driver, to establish an identical reference potential.
+3. **Cable:** Use twisted pair cable (e.g. UTP Cat5/6 for networking) for A and B; this greatly reduces induced noise.
 
 ---
 
-### 🚀 Resumen corto para un rápido ensamble
+### 🚀 Short summary for quick assembly
 
 ✔️ **TX (21)** → DI  
 ✔️ **RX (20)** → RO  
-✔️ **GPIO (10)** → DE + RE (juntos)  
-✔️ **A/B** → Borneras A/B driver  
-✔️ **HIGH** = transmite / **LOW** = recibe (Lo gestiona el software automáticamente)
+✔️ **GPIO (10)** → DE + RE (tied together)  
+✔️ **A/B** → A/B driver terminals  
+✔️ **HIGH** = transmit / **LOW** = receive (Managed automatically by software)
 
-### 📸 Pinouts de Referencia
+### 📸 Reference Pinouts
 
-**Pinout ESP32-C3 SuperMini:**
-![Pinout ESP32-C3](docs/pinout_esp32c3.jpeg)
+**ESP32-C3 SuperMini Pinout:**
+![ESP32-C3 Pinout](docs/pinout_esp32c3.jpeg)
 
-**Pinout MAX485:**
-![Pinout MAX485](docs/pinout_max485.jpeg)
+**MAX485 Pinout:**
+![MAX485 Pinout](docs/pinout_max485.jpeg)

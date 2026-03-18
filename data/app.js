@@ -41,9 +41,9 @@ configForm.addEventListener('submit', async (e) => {
 
     try {
         await fetch('/api/config', { method: 'POST', body: formData });
-        alert('Configuración guardada exitosamente');
+        alert('Configuration saved successfully');
     } catch (e) {
-        alert('Error guardando configuración');
+        alert('Error saving configuration');
     }
 });
 

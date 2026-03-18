@@ -1,48 +1,54 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ESP32 Motor Control</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="container">
         <header>
-            <h1>Control de Motor</h1>
+            <h1>Motor Control</h1>
             <div id="connection-status" class="status-badge offline">Offline</div>
         </header>
 
         <main>
             <section class="panel dashboard">
-                <h2>Estado del Sistema</h2>
+                <h2>System Status</h2>
                 <div class="status-grid">
                     <div class="status-card">
-                        <span class="label">Estado Motor</span>
-                        <span id="sys-state" class="value">Desconocido</span>
+                        <span class="label">Motor State</span>
+                        <span id="sys-state" class="value">Unknown</span>
                     </div>
                     <div class="status-card">
-                        <span class="label">Velocidad Actual</span>
+                        <span class="label">Current Speed</span>
                         <span id="sys-speed" class="value">0</span>
                     </div>
                 </div>
             </section>
 
             <section class="panel control">
-                <h2>Control Manual</h2>
+                <h2>Manual Control</h2>
                 <div class="button-group">
-                    <button id="btn-left" class="action-btn dir-btn">◀️ Giro Izquierda</button>
-                    <button id="btn-stop" class="action-btn stop-btn">⏹️ STOP</button>
-                    <button id="btn-right" class="action-btn dir-btn">Giro Derecha ▶️</button>
+                    <div class="button-row">
+                        <button id="btn-left" class="action-btn dir-btn">◀ LEFT</button>
+                        <button id="btn-right" class="action-btn dir-btn">RIGHT ▶</button>
+                    </div>
+                    <div class="button-row">
+                        <button id="btn-stop" class="action-btn stop-btn">■ STOP</button>
+                    </div>
                 </div>
-                <p class="help-text">Mantén presionado el botón para girar. Suelta para detener.</p>
+                <p class="help-text">Press and hold the button to rotate. Release to stop.</p>
             </section>
 
             <section class="panel config">
-                <h2>Configuración</h2>
+                <h2>Configuration</h2>
                 <form id="config-form">
                     <div class="input-group">
-                        <label for="speedFinal">Velocidad Final</label>
+                        <label for="speedFinal">Target Speed</label>
                         <input type="number" id="speedFinal" min="0" max="10000" required>
                     </div>
                     <div class="input-group">
@@ -53,11 +59,12 @@
                         <label for="gap">Gap (100-1000 ms)</label>
                         <input type="number" id="gap" min="100" max="1000" required>
                     </div>
-                    <button type="submit" class="save-btn">Guardar Configuración</button>
+                    <button type="submit" class="save-btn">Save Configuration</button>
                 </form>
             </section>
         </main>
     </div>
     <script src="app.js"></script>
 </body>
+
 </html>
