@@ -83,9 +83,11 @@ Serial1.begin(modbusBaudrate, SERIAL_8N1, PIN_RX, PIN_TX);
 ---
 
 ### 🚀 Resumen corto para un rápido ensamble
-![alt text](image.png)
+
 ✔️ **TX (21)** → DI  
 ✔️ **RX (20)** → RO  
 ✔️ **GPIO (10)** → DE + RE (juntos)  
 ✔️ **A/B** → Borneras A/B driver  
 ✔️ **HIGH** = transmite / **LOW** = recibe (Lo gestiona el software automáticamente)
+
+![Pinout ESP32-C3 y MAX485](pinout.png)
