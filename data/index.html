@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 Motor Control</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Control de Motor</h1>
+            <div id="connection-status" class="status-badge offline">Offline</div>
+        </header>
+
+        <main>
+            <section class="panel dashboard">
+                <h2>Estado del Sistema</h2>
+                <div class="status-grid">
+                    <div class="status-card">
+                        <span class="label">Estado Motor</span>
+                        <span id="sys-state" class="value">Desconocido</span>
+                    </div>
+                    <div class="status-card">
+                        <span class="label">Velocidad Actual</span>
+                        <span id="sys-speed" class="value">0</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel control">
+                <h2>Control Manual</h2>
+                <div class="button-group">
+                    <button id="btn-left" class="action-btn dir-btn">◀️ Giro Izquierda</button>
+                    <button id="btn-stop" class="action-btn stop-btn">⏹️ STOP</button>
+                    <button id="btn-right" class="action-btn dir-btn">Giro Derecha ▶️</button>
+                </div>
+                <p class="help-text">Mantén presionado el botón para girar. Suelta para detener.</p>
+            </section>
+
+            <section class="panel config">
+                <h2>Configuración</h2>
+                <form id="config-form">
+                    <div class="input-group">
+                        <label for="speedFinal">Velocidad Final</label>
+                        <input type="number" id="speedFinal" min="0" max="10000" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="delta">Delta (±)</label>
+                        <input type="number" id="delta" min="0" max="5000" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="gap">Gap (100-1000 ms)</label>
+                        <input type="number" id="gap" min="100" max="1000" required>
+                    </div>
+                    <button type="submit" class="save-btn">Guardar Configuración</button>
+                </form>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
