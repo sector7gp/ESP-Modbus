@@ -7,8 +7,8 @@
 #include <Preferences.h>
 #include <WiFi.h>
 
-#define PIN_IN1 8
-#define PIN_IN2 9
+#define PIN_IN1 0
+#define PIN_IN2 1
 #define PIN_RX 20
 #define PIN_TX 21
 #define PIN_DE_RE 10 // Optional DE/RE pin for RS485
